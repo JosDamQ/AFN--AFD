@@ -1,0 +1,53 @@
+{
+  "name": "visualizador-afd",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+
+    "electron:compile": "tsc -p electron/tsconfig.json",
+    "electron:dev": "concurrently -k \"npm run dev\" \"wait-on http://localhost:5173 && NODE_ENV=development electron dist-electron/main.js\"",
+    "electron:build": "npm run build && npm run electron:compile && electron-builder",
+    "electron:preview": "npm run build && npm run electron:compile && NODE_ENV=production electron dist-electron/main.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^9.1.2",
+    "electron": "^36.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.2",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "com.universidad.visualizador-afd",
+    "productName": "Visualizador AFD",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "target": ["nsis", "zip"]
+    },
+    "linux": {
+      "target": ["AppImage", "deb"]
+    }
+  }
+}

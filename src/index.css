@@ -1,0 +1,72 @@
+:root {
+  /* Fondos — blanco y grises muy claros */
+  --bg-main:        #ffffff;
+  --bg-panel:       #f9f9f9;
+  --bg-panel-hover: #f2f2f2;
+  --bg-header:      #f0f0f0;
+  --bg-chip:        #efefef;
+
+  /* Acento */
+  --accent:         #333333;
+  --accent-subtle:  rgba(0, 0, 0, 0.04);
+
+  /* Feedback */
+  --success:        #444444;
+  --success-subtle: rgba(0, 0, 0, 0.04);
+  --error:          #444444;
+  --error-subtle:   rgba(0, 0, 0, 0.04);
+
+  /* Texto */
+  --text-primary:   #000000;
+  --text-secondary: #000000;
+  --text-muted:     #000000;
+
+  /* Bordes */
+  --border-idle:    #d4d4d4;
+  --border-subtle:  #e5e5e5;
+  --border-hover:   #aaaaaa;
+  --divider:        #e0e0e0;
+
+  /* Hover de filas */
+  --row-hover:      rgba(0, 0, 0, 0.03);
+
+  /* Fuentes */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Courier New', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 2px;
+}
