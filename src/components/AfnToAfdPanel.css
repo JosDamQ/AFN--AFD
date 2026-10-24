@@ -1,0 +1,414 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AfnToAfdPanel — Panel derecho: Conversión AFN → AFD
+   Estructura vertical:
+     1. Validador de cadenas  (flex-shrink: 0)
+     2. Cuadro quintupla      (flex-shrink: 0)
+     3. Tabla W del AFD       (flex: 1, overflow auto)
+   ═══════════════════════════════════════════════════════════════════ */
+
+.afn-afd-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: var(--bg-panel);
+  overflow: hidden;
+}
+
+/* ── Placeholder vacío ───────────────────────────────────────────── */
+.afn-afd-panel--empty {
+  align-items: center;
+  justify-content: center;
+}
+
+.afn-afd-panel__placeholder {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* ── Separador reutilizable entre secciones ──────────────────────── */
+.afn-afd-panel__section {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--divider);
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SECCIÓN 1 — Validador de cadenas
+   ───────────────────────────────────────────────────────────────── */
+
+.validador__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin: 0 0 10px 0;
+}
+
+.validador__row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.validador__input {
+  flex: 1;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-idle);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.validador__input:focus {
+  border-color: var(--text-secondary);
+}
+
+.validador__input::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.validador__btn {
+  background-color: transparent;
+  border: 1px solid var(--border-idle);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.validador__btn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.validador__btn:active {
+  opacity: 0.75;
+}
+
+/* Resultado de la validación */
+.validador__resultado {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.validador__resultado--valida {
+  color: #4ade80; /* verde */
+}
+
+.validador__resultado--invalida {
+  color: #f87171; /* rojo */
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SECCIÓN 2 — Cuadro quintupla
+   ───────────────────────────────────────────────────────────────── */
+
+.quintupla__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin: 0 0 10px 0;
+}
+
+.quintupla__tabla {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid var(--border-idle);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+
+.quintupla__fila {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.quintupla__fila:last-child {
+  border-bottom: none;
+}
+
+.quintupla__fila:hover {
+  background-color: var(--row-hover);
+}
+
+.quintupla__celda-label {
+  padding: 8px 14px;
+  width: 48px;
+  min-width: 48px;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--bg-header);
+  border-right: 1px solid var(--border-idle);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.quintupla__celda-valor {
+  padding: 8px 14px;
+  color: var(--text-primary);
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+.quintupla__badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SECCIÓN 3 — Tabla W del AFD (función de transición)
+   ───────────────────────────────────────────────────────────────── */
+
+.afd-tabla-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 16px;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.afd-tabla__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin: 0 0 10px 0;
+  flex-shrink: 0;
+}
+
+.afd-tabla__title-delta {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-secondary);
+}
+
+.afd-tabla__scroll-wrapper {
+  flex: 1;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-idle);
+}
+
+/* ── Tabla de transición ── */
+.afd-tabla {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  font-family: var(--font-mono);
+}
+
+/* Esquina diagonal */
+.afd-tabla__corner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 80px;
+  min-width: 80px;
+  background-color: var(--bg-header);
+  padding: 10px 12px;
+  border-right: 1px solid var(--border-idle);
+  border-bottom: 1px solid var(--border-idle);
+}
+
+.corner__estado {
+  position: absolute;
+  top: 7px;
+  left: 9px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-family: 'Georgia', serif;
+  font-style: italic;
+}
+
+.corner__simbolo {
+  position: absolute;
+  bottom: 7px;
+  right: 9px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-family: 'Georgia', serif;
+  font-style: italic;
+}
+
+.corner__divider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    var(--border-idle) calc(50% - 0.5px),
+    var(--border-idle) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
+/* Headers de símbolos */
+.afd-tabla__th-simbolo {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--bg-header);
+  padding: 10px 18px;
+  text-align: center;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-idle);
+  border-right: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+/* Header especial para la columna Composición */
+.afd-tabla__th-composicion {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--bg-header);
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-idle);
+  white-space: nowrap;
+}
+
+/* Filas */
+.afd-tabla__row {
+  transition: background-color 0.1s ease;
+}
+
+.afd-tabla__row:hover {
+  background-color: var(--row-hover);
+}
+
+/* Columna estado (sticky izquierda) */
+.afd-tabla__th-estado {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: var(--bg-panel);
+  padding: 10px 14px;
+  border-right: 1px solid var(--border-idle);
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.afd-tabla__row:hover .afd-tabla__th-estado {
+  background-color: var(--bg-panel);
+}
+
+.afd-estado-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.afd-estado-cell__badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+/* Celdas de transición */
+.afd-tabla__td {
+  padding: 10px 18px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Celda de composición */
+.afd-tabla__td-composicion {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 400;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.afd-tabla__td-composicion--vacia {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-style: normal;
+}
+
+/* ── Leyenda ── */
+.afd-tabla__leyenda {
+  display: flex;
+  gap: 20px;
+  padding-top: 10px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.afd-leyenda__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.afd-leyenda__swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  background-color: var(--bg-chip);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-idle);
+}

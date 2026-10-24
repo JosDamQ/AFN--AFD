@@ -38,7 +38,7 @@
 }
 
 .app__half--right {
-  /* vacío por ahora */
+  overflow: hidden;
 }
 
 /* ── Fila superior dentro de la mitad izquierda ── */

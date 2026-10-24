@@ -3,6 +3,7 @@ import './App.css'
 import { DropZone } from './components/DropZone'
 import { VectoresPanel } from './components/VectoresPanel'
 import { MatrizPanel } from './components/MatrizPanel'
+import { AfnToAfdPanel } from './components/AfnToAfdPanel'
 import { Automata } from './models/Automata'
 
 function App() {
@@ -80,8 +81,10 @@ function App() {
 
       </div>
 
-      {/* ── Mitad derecha: vacía por ahora ── */}
-      <div className="app__half app__half--right" aria-hidden="true" />
+      {/* ── Mitad derecha: conversión AFN → AFD ── */}
+      <div className="app__half app__half--right">
+        <AfnToAfdPanel automata={automata} />
+      </div>
 
     </div>
   )
