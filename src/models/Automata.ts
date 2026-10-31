@@ -5,7 +5,7 @@ import { Arista } from './Arista'
 export type MatrizTransicion = Record<string, Record<string, string[]>>
 
 /**
- * Representa un Autómata Finito Determinista (AFD).
+ * Representa un Autómata Finito No-determinista (AFN).
  * Encapsula la quíntupla completa: (Q, Σ, δ, q0, F)
  *   Q  = estados
  *   Σ  = alfabeto
@@ -54,10 +54,10 @@ export class Automata {
   get transiciones(): Arista[] {
     return [...this._transiciones]
   }
+
   /**
    * Devuelve la matriz de transición del autómata.
-   * Si la matriz ya fue calculada anteriormente, se devuelve la versión en cache.
-   * De lo contrario, se construye la matriz y se guarda en cache para futuras llamadas.
+   * Usa caché para no recalcularla en llamadas sucesivas.
    */
   buildMatriz(): MatrizTransicion {
     if (this._matriz) return this._matriz

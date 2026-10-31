@@ -4,27 +4,21 @@ import { Arista } from '../models/Arista'
 import { Automata } from '../models/Automata'
 
 /**
- * Parsea el contenido de un archivo .txt con la quíntupla de un AFD
+ * Parsea el contenido de un archivo .txt con la quíntupla de un AFN
  * y retorna una instancia de Automata.
  *
  * Formato esperado:
- *   Q:{A1,B,C,D,E}
- *   S:{a,b}
- *   i:A1
- *   A:{C}
- *   W:{(A1,B,a);(A1,D,b);...}
- *
- * @param texto - Contenido del archivo .txt como string
- * @returns instancia de Automata completamente construida
- * @throws Error si el formato es inválido o falta alguna sección
+ *   Q:{1,2,3}
+ *   S:{a,b,e}
+ *   i:1
+ *   A:{3}
+ *   W:{(1,2,a);(2,3,b);...}
  */
 export function parsearArchivo(texto: string): Automata {
   if (!texto || typeof texto !== 'string' || texto.trim() === '') {
     throw new Error('El archivo está vacío o no contiene texto válido.')
   }
 
-  // Verificar que las secciones usen EXACTAMENTE mayúsculas (Q, S, i, A, W)
-  // Si se detecta alguna en minúscula dar un error claro
   const erroresCaseSensitive: string[] = []
   if (/^q\s*:/m.test(texto))  erroresCaseSensitive.push('"q" debe ser "Q"')
   if (/^s\s*:/m.test(texto))  erroresCaseSensitive.push('"s" debe ser "S"')
@@ -39,14 +33,12 @@ export function parsearArchivo(texto: string): Automata {
     )
   }
 
-  //Extraer secciones con regex — sin flag 'i', case sensitive
   const matchQ = texto.match(/Q\s*:\s*\{([^}]+)\}/)
   const matchS = texto.match(/S\s*:\s*\{([^}]+)\}/)
   const matchI = texto.match(/i\s*:\s*([^\n\r;{}]+)/)
   const matchA = texto.match(/A\s*:\s*\{([^}]+)\}/)
   const matchW = texto.match(/W\s*:\s*\{([\s\S]*)\}\s*$/)
 
-  //Validar que todas las secciones existan
   const secciones: Record<string, RegExpMatchArray | null> = {
     Q: matchQ, S: matchS, i: matchI, A: matchA, W: matchW,
   }
@@ -66,7 +58,6 @@ export function parsearArchivo(texto: string): Automata {
   const aContent = matchA![1]
   const wContent = matchW![1]
 
-  //Parsear Q
   const nombresEstados = qContent
     .split(',')
     .map((s) => s.trim())
@@ -76,7 +67,6 @@ export function parsearArchivo(texto: string): Automata {
     throw new Error('La sección Q no contiene estados válidos.')
   }
 
-  // 'e' está reservada exclusivamente para epsilon — no puede ser nombre de estado
   if (nombresEstados.includes('e')) {
     throw new Error(
       `Nombre de estado inválido: "e" está reservada para epsilon y no puede usarse como estado en Q.\n` +
@@ -84,7 +74,6 @@ export function parsearArchivo(texto: string): Automata {
     )
   }
 
-  //Parsear S
   const simbolos = sContent
     .split(',')
     .map((s) => s.trim())
@@ -94,7 +83,6 @@ export function parsearArchivo(texto: string): Automata {
     throw new Error('La sección S no contiene símbolos válidos.')
   }
 
-  //Parsear i
   const nombreInicial = iContent.trim()
 
   if (!nombreInicial) {
@@ -106,7 +94,6 @@ export function parsearArchivo(texto: string): Automata {
     )
   }
 
-  //Parsear A
   const nombresAceptacion = aContent
     .split(',')
     .map((s) => s.trim())
@@ -123,13 +110,8 @@ export function parsearArchivo(texto: string): Automata {
     }
   }
 
-  //Parsear W
-  // Primero validar que las tuplas estén separadas por ';' y no por otros caracteres
-  // Se detecta si hay dos tuplas consecutivas sin ';' entre ellas
   const wTrimmed = wContent.trim()
   if (wTrimmed.length > 0) {
-    // Buscar si hay una ')' seguida de algo que no sea ';', espacios o fin de string
-    // lo que indicaría un separador incorrecto (ej: coma entre tuplas)
     const separadorIncorrecto = /\)\s*[^;\s]/.test(wTrimmed.replace(/\)\s*$/, ''))
     if (separadorIncorrecto) {
       throw new Error(
@@ -167,7 +149,6 @@ export function parsearArchivo(texto: string): Automata {
     throw new Error('La sección W no contiene aristas válidas.')
   }
 
-  //Construir instancias del modelo
   const alfabeto = new Alfabeto(simbolos)
 
   const estados = nombresEstados.map(
