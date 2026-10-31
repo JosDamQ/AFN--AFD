@@ -44,7 +44,7 @@
 /* ── Fila superior dentro de la mitad izquierda ── */
 .app__top {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1.5fr 2fr;
   grid-template-rows: 1fr;
   flex: 1;
   min-height: 0;
@@ -65,8 +65,8 @@
   flex-direction: column;
   overflow: hidden;
   border-right: 1px solid var(--divider);
-  padding: 16px;
-  gap: 12px;
+  padding: 12px;
+  gap: 8px;
 }
 
 /* ── Header dentro del panel drop ── */
@@ -95,18 +95,21 @@
   color: var(--text-secondary);
 }
 
-/* El dropzone ocupa el espacio restante del panel */
+/* El dropzone tiene altura fija compacta */
 .app__dropzone-wrapper {
-  flex: 1;
-  min-height: 0;
+  flex-shrink: 0;
+  height: 130px;
 }
 
 /* ── Despliegue del archivo ── */
 .app__archivo {
-  flex-shrink: 0;
+  flex: 1;
+  min-height: 0;
   border: 1px solid var(--border-idle);
   border-radius: 6px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .app__archivo-label {
@@ -118,6 +121,7 @@
   padding: 5px 10px;
   background-color: var(--bg-header);
   border-bottom: 1px solid var(--border-idle);
+  flex-shrink: 0;
 }
 
 .app__archivo-content {
@@ -128,7 +132,7 @@
   word-break: break-word;
   padding: 10px 12px;
   margin: 0;
-  max-height: 120px;
+  flex: 1;
   overflow-y: auto;
   background-color: var(--bg-panel);
   line-height: 1.6;

@@ -41,9 +41,13 @@ function App() {
                 <circle cx="26" cy="24" r="2.2" stroke="currentColor" strokeWidth="1.2"/>
               </svg>
               <h1 className="app__title">
-                Visualizador <span>AFD</span>
+                Conversor <span>AFN → AFD</span>
               </h1>
             </header>
+
+          <div className="app__dropzone-wrapper">
+              <DropZone onAutomataLoaded={handleAutomataLoaded} />
+            </div>
 
             {/* Contenido del archivo */}
           {textoArchivo && (
@@ -52,10 +56,6 @@ function App() {
               <pre className="app__archivo-content">{textoArchivo}</pre>
             </div>
           )}
-
-          <div className="app__dropzone-wrapper">
-              <DropZone onAutomataLoaded={handleAutomataLoaded} />
-            </div>
           </div>
 
           {/* Panel vectores Q, S, A */}

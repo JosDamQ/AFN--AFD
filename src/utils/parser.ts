@@ -23,12 +23,28 @@ export function parsearArchivo(texto: string): Automata {
     throw new Error('El archivo está vacío o no contiene texto válido.')
   }
 
-  //Extraer secciones con regex
-  const matchQ = texto.match(/Q\s*:\s*\{([^}]+)\}/i)
-  const matchS = texto.match(/S\s*:\s*\{([^}]+)\}/i)
-  const matchI = texto.match(/i\s*:\s*([^\n\r;{}]+)/i)
-  const matchA = texto.match(/A\s*:\s*\{([^}]+)\}/i)
-  const matchW = texto.match(/W\s*:\s*\{([\s\S]*)\}\s*$/i)
+  // Verificar que las secciones usen EXACTAMENTE mayúsculas (Q, S, i, A, W)
+  // Si se detecta alguna en minúscula dar un error claro
+  const erroresCaseSensitive: string[] = []
+  if (/^q\s*:/m.test(texto))  erroresCaseSensitive.push('"q" debe ser "Q"')
+  if (/^s\s*:/m.test(texto))  erroresCaseSensitive.push('"s" debe ser "S"')
+  if (/^I\s*:/m.test(texto))  erroresCaseSensitive.push('"I" debe ser "i"')
+  if (/^a\s*:/m.test(texto))  erroresCaseSensitive.push('"a" debe ser "A"')
+  if (/^w\s*:/m.test(texto))  erroresCaseSensitive.push('"w" debe ser "W"')
+  if (erroresCaseSensitive.length > 0) {
+    throw new Error(
+      `Formato inválido: las secciones deben usar exactamente estas letras: Q, S, i, A, W.\n` +
+      `Corregí lo siguiente:\n` +
+      erroresCaseSensitive.map((e) => `  • ${e}`).join('\n'),
+    )
+  }
+
+  //Extraer secciones con regex — sin flag 'i', case sensitive
+  const matchQ = texto.match(/Q\s*:\s*\{([^}]+)\}/)
+  const matchS = texto.match(/S\s*:\s*\{([^}]+)\}/)
+  const matchI = texto.match(/i\s*:\s*([^\n\r;{}]+)/)
+  const matchA = texto.match(/A\s*:\s*\{([^}]+)\}/)
+  const matchW = texto.match(/W\s*:\s*\{([\s\S]*)\}\s*$/)
 
   //Validar que todas las secciones existan
   const secciones: Record<string, RegExpMatchArray | null> = {
@@ -58,6 +74,14 @@ export function parsearArchivo(texto: string): Automata {
 
   if (nombresEstados.length === 0) {
     throw new Error('La sección Q no contiene estados válidos.')
+  }
+
+  // 'e' está reservada exclusivamente para epsilon — no puede ser nombre de estado
+  if (nombresEstados.includes('e')) {
+    throw new Error(
+      `Nombre de estado inválido: "e" está reservada para epsilon y no puede usarse como estado en Q.\n` +
+      `Usá otro nombre para ese estado (ej: q1, A, E1, etc.).`,
+    )
   }
 
   //Parsear S
@@ -100,6 +124,21 @@ export function parsearArchivo(texto: string): Automata {
   }
 
   //Parsear W
+  // Primero validar que las tuplas estén separadas por ';' y no por otros caracteres
+  // Se detecta si hay dos tuplas consecutivas sin ';' entre ellas
+  const wTrimmed = wContent.trim()
+  if (wTrimmed.length > 0) {
+    // Buscar si hay una ')' seguida de algo que no sea ';', espacios o fin de string
+    // lo que indicaría un separador incorrecto (ej: coma entre tuplas)
+    const separadorIncorrecto = /\)\s*[^;\s]/.test(wTrimmed.replace(/\)\s*$/, ''))
+    if (separadorIncorrecto) {
+      throw new Error(
+        `Formato inválido en W: las tuplas deben separarse con punto y coma ";".\n` +
+        `Formato correcto: W:{(origen,destino,simbolo);(origen,destino,simbolo);...}`,
+      )
+    }
+  }
+
   const regexTupla = /\(\s*([^,)]+)\s*,\s*([^,)]+)\s*,\s*([^,)]+)\s*\)/g
   const aristas: Arista[] = []
   let tupla: RegExpExecArray | null

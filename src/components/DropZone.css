@@ -47,16 +47,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 20px;
+  gap: 4px;
+  padding: 10px;
   text-align: center;
   width: 100%;
 }
 
 /* ── Ícono ── */
 .dropzone__icon {
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   color: var(--text-muted);
   transition: color 0.15s ease, transform 0.15s ease;
 }
@@ -82,7 +82,7 @@
 /* ── Textos ── */
 .dropzone__title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-primary);
 }
@@ -92,7 +92,7 @@
 
 .dropzone__subtitle {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
